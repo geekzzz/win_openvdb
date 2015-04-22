@@ -1,20 +1,68 @@
-# yue.nicholas@gmail.com
+
+# Windows OpenVDB cmake
+# for win_openvdb fork by: lithozine (ramahoetzlein@gmail.com)
+# original by yue.nicholas@gmail.com
+
+
+macro (POST_COPY SRC_TARGET SRC_PATH SRC_MATCH DEST_DIR)
+  # Make sure dir exists
+  MAKE_DIRECTORY ( "${DEST_DIR}" )
+  
+  # Locate all files matching pattern
+  message ( STATUS "Packaging for /include: ${SRC_PATH}/${SRC_MATCH} -> ${DEST_DIR}" )    
+  if ( "${SRC_MATCH}" MATCHES "(.*)\\*(.*)" )  
+     # wildcard given, find all matching files (MUST EXIST NOW, AT CMAKE TIME, BEFORE BUILD)
+     FILE ( GLOB src_list ABSOLUTE "${SRC_PATH}/${SRC_MATCH}" )
+  else ()
+     # specific file, just copy it
+     SET ( src_list "${SRC_PATH}/${SRC_MATCH}")
+  endif ()
+  
+  # Add post-build copy
+  foreach ( src_file ${src_list})
+    ADD_CUSTOM_COMMAND ( TARGET ${SRC_TARGET}
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${src_file} ${DEST_DIR}
+    )
+  endforeach () 
+endmacro ()
+
+
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
 PROJECT ( OpenVDB )
+GET_FILENAME_COMPONENT ( BUILD_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../../build/" REALPATH )
+GET_FILENAME_COMPONENT ( SOURCE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../" REALPATH )
+GET_FILENAME_COMPONENT ( CMAKE_PATH  "${CMAKE_CURRENT_SOURCE_DIR}/../cmake_modules/" REALPATH )
+
+SET ( BASE_BUILD_PATH  ${BUILD_PATH} CACHE PATH "Base build output path.." )
+SET ( BASE_SOURCE_PATH  ${SOURCE_PATH} CACHE PATH "Base source code path..")
+SET ( CMAKE_MODULE_PATH ${CMAKE_PATH} CACHE PATH "Path to Find.cmake modules" )
 
 FIND_PACKAGE ( GLFW3 REQUIRED )
 IF (WIN32)
   FIND_PACKAGE ( GLEW REQUIRED )
 ENDIF()
+
+# Better search hints for Boost 
+  FILE ( GLOB children RELATIVE ${BASE_BUILD_PATH} ${BASE_BUILD_PATH}/*)
+  UNSET ( BOOST_ROOT )
+  FOREACH(subdir ${children})
+      IF ( "${subdir}" MATCHES "boost(.*)" )
+        SET ( BOOST_ROOT ${BASE_BUILD_PATH}/${subdir}/ CACHE PATH "Path to Boost")
+        SET ( BOOST_LIBRARYDIR "${BOOST_ROOT}/lib64-msvc-10.0" )
+     ENDIF()
+  ENDFOREACH()    
+  
 FIND_PACKAGE ( Boost REQUIRED COMPONENTS iostreams system thread )
+
 FIND_PACKAGE ( ILMBase REQUIRED )
 FIND_PACKAGE ( OpenEXR REQUIRED )
 FIND_PACKAGE ( TBB REQUIRED )
 FIND_PACKAGE ( ZLIB REQUIRED )
 FIND_PACKAGE ( OpenGL REQUIRED )
-FIND_PACKAGE ( Blosc REQUIRED )
-FIND_PACKAGE ( Doxygen REQUIRED )
+# FIND_PACKAGE ( Blosc REQUIRED )
+# FIND_PACKAGE ( Doxygen REQUIRED )
 IF (APPLE)
   FIND_LIBRARY ( COCOA_LIBRARY Cocoa )
   FIND_LIBRARY ( IOKIT_LIBRARY IOKit )
@@ -34,7 +82,8 @@ ENDIF ()
 # MESSAGE ( "ZLIB_INCLUDE_DIR = ${ZLIB_INCLUDE_DIR}")
 
 INCLUDE_DIRECTORIES ( ${Boost_INCLUDE_DIR} )
-INCLUDE_DIRECTORIES ( ${ILMBASE_INCLUDE_DIRS} )
+INCLUDE_DIRECTORIES ( ${ILMBASE_INCLUDE_DIR} )
+INCLUDE_DIRECTORIES ( ${OPENEXR_INCLUDE_DIR} )
 INCLUDE_DIRECTORIES ( ${TBB_INCLUDE_DIR} )
 INCLUDE_DIRECTORIES ( ${OPENGL_INCLUDE_DIR} )
 INCLUDE_DIRECTORIES ( ${ZLIB_INCLUDE_DIR} )
@@ -47,13 +96,13 @@ INCLUDE_DIRECTORIES ( . ) # So they can simulate referencing installed headers
 
 IF (WIN32)
   # Because of implicit linking!
-  LINK_DIRECTORIES ( ${Boost_LIBRARY_DIR} )
+  LINK_DIRECTORIES ( ${Boost_LIBRARY_DIR_RELEASE} )
 ENDIF ()
 
 INCLUDE_DIRECTORIES ( ${BLOSC_INCLUDE_DIR} )
 
 IF (WIN32)
-  ADD_DEFINITIONS ( -D_WIN32 -DNOMINMAX -DHALF_EXPORTS -DOPENVDB_DLL )
+  ADD_DEFINITIONS ( -D_WIN32 -DNOMINMAX -DOPENVDB_STATICLIB -DOPENEXR_DLL )
 ELSE ()
   ADD_DEFINITIONS ( -pthread -fPIC )
 ENDIF ()
@@ -85,22 +134,41 @@ SET ( OPENVDB_LIBRARY_SOURCE_FILES
   util/Formats.cc
   util/Util.cc
   )
+  
+  #---- removed blosc dependency (Rama)
+  # COMPILE_FLAGS "-DOPENVDB_PRIVATE -DOPENVDB_USE_BLOSC ${OPENVDB_USE_GLFW_FLAG}"
 
 SET_SOURCE_FILES_PROPERTIES ( ${OPENVDB_LIBRARY_SOURCE_FILES}
-  PROPERTIES
-  COMPILE_FLAGS "-DOPENVDB_PRIVATE -DOPENVDB_USE_BLOSC ${OPENVDB_USE_GLFW_FLAG}"
+  PROPERTIES  
+  COMPILE_FLAGS "-DOPENVDB_PRIVATE ${OPENVDB_USE_GLFW_FLAG} /bigobj"
 )
 
 ADD_LIBRARY ( openvdb STATIC
   ${OPENVDB_LIBRARY_SOURCE_FILES}
   )
+if ( NOT EXISTS ${OPENEXR_ILMIMF_LIBRARY_DEBUG} )
+  SET ( OPENEXR_ILMIMF_LIBRARY_DEBUG ${OPENEXR_ILMIMF_LIBRARY_RELEASE} )
+endif()
 
-TARGET_LINK_LIBRARIES ( openvdb
-  ${Boost_LIBRARIES}
-  ${Tbb_TBB_LIBRARY}
-  ${Ilmbase_HALF_LIBRARY}
+  
+
+TARGET_LINK_LIBRARIES ( openvdb debug
+  ${Boost_SYSTEM_LIBRARY_DEBUG}
+  ${Boost_THREAD_LIBRARY_DEBUG}
+  ${TBB_LIBRARY_DEBUG}
+  ${ILMBASE_HALF_LIBRARY_DEBUG}
+  ${OPENEXR_ILMIMF_LIBRARY_DEBUG}
   ${ZLIB_LIBRARY}
   )
+TARGET_LINK_LIBRARIES ( openvdb optimized
+  ${Boost_SYSTEM_LIBRARY_RELEASE}
+  ${Boost_THREAD_LIBRARY_RELEASE}
+  ${TBB_LIBRARY}
+  ${ILMBASE_HALF_LIBRARY_RELEASE}
+  ${OPENEXR_ILMIMF_LIBRARY_RELEASE}
+  ${ZLIB_LIBRARY}
+  )
+  
 
 SET ( VDB_PRINT_SOURCE_FILES  cmd/openvdb_print/main.cc )
 SET_SOURCE_FILES_PROPERTIES ( ${VDB_PRINT_SOURCE_FILES}
@@ -126,14 +194,40 @@ ADD_EXECUTABLE ( vdb_render
   ${VDB_RENDER_SOURCE_FILES}
   )
 
-TARGET_LINK_LIBRARIES ( vdb_render
-  openvdb
-  ${BLOSC_blosc_LIBRARY} 
-  ${Ilmbase_ILMTHREAD_LIBRARY}
-  ${Ilmbase_IEX_LIBRARY}
-  ${Openexr_ILMIMF_LIBRARY}
+TARGET_LINK_LIBRARIES ( vdb_render debug
+  openvdb  
+  ${Ilmbase_ILMTHREAD_LIBRARY_DEBUG}
+  ${Ilmbase_IEX_LIBRARY_DEBUG}
+  ${OPENEXR_ILMIMF_LIBRARY_DEBUG}
   )
+  
+TARGET_LINK_LIBRARIES ( vdb_render optimized
+  openvdb  
+  ${Ilmbase_ILMTHREAD_LIBRARY_RELEASE}
+  ${Ilmbase_IEX_LIBRARY_RELEASE}
+  ${OPENEXR_ILMIMF_LIBRARY_RELEASE}
+  )
+  
+# Copy required dlls to output path
+POST_COPY ( vdb_render ${OPENEXR_HOME}/lib IlmImf.dll "${CMAKE_BINARY_DIR}/Release" )
+POST_COPY ( vdb_render ${ILMBASE_HOME}/lib Half.dll "${CMAKE_BINARY_DIR}/Release" )
+POST_COPY ( vdb_render ${ILMBASE_HOME}/lib Iex.dll "${CMAKE_BINARY_DIR}/Release" )
+POST_COPY ( vdb_render ${ILMBASE_HOME}/lib Imath.dll "${CMAKE_BINARY_DIR}/Release" )
+POST_COPY ( vdb_render ${ILMBASE_HOME}/lib IlmThread.dll "${CMAKE_BINARY_DIR}/Release" )
+POST_COPY ( vdb_render ${ZLIB_ROOT_DIR}/lib zlib.dll "${CMAKE_BINARY_DIR}/Release" )
+POST_COPY ( vdb_render ${TBB_BINARY_DIR} *.dll "${CMAKE_BINARY_DIR}/Release" )
+POST_COPY ( vdb_render ${Boost_LIBRARY_DIR_RELEASE} boost_system*.dll "${CMAKE_BINARY_DIR}/Release" )
 
+POST_COPY ( vdb_render ${OPENEXR_HOME}/lib IlmImf.dll "${CMAKE_BINARY_DIR}/Debug" )
+POST_COPY ( vdb_render ${ILMBASE_HOME}/lib Half.dll "${CMAKE_BINARY_DIR}/Debug" )
+POST_COPY ( vdb_render ${ILMBASE_HOME}/lib Iex.dll "${CMAKE_BINARY_DIR}/Debug" )
+POST_COPY ( vdb_render ${ILMBASE_HOME}/lib Imath.dll "${CMAKE_BINARY_DIR}/Debug" )
+POST_COPY ( vdb_render ${ILMBASE_HOME}/lib IlmThread.dll "${CMAKE_BINARY_DIR}/Debug" )
+POST_COPY ( vdb_render ${ZLIB_ROOT_DIR}/lib zlib.dll "${CMAKE_BINARY_DIR}/Debug" )
+POST_COPY ( vdb_render ${TBB_BINARY_DIR} *.dll "${CMAKE_BINARY_DIR}/Debug" )
+POST_COPY ( vdb_render ${Boost_LIBRARY_DIR_DEBUG} boost_system*.dll "${CMAKE_BINARY_DIR}/Debug" )
+
+  
 SET ( VDB_VIEW_SOURCE_FILES
   cmd/openvdb_view/main.cc
   viewer/Camera.cc

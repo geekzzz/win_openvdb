@@ -33,7 +33,7 @@
 
 #include "version.h"
 #include "Platform.h"
-#include <OpenEXR/half.h>
+#include "half.h"
 #include <openvdb/math/Math.h>
 #include <openvdb/math/BBox.h>
 #include <openvdb/math/Quat.h>
