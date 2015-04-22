@@ -17,7 +17,7 @@ Post questions/comments to:
 The main idea behind this build is to keep a clear separation between 
 the source code and the final build outputs and projects. This makes it easy to 
 wipe the current build output, while keeping the source code handy to regenerate.
-You can be certain that \source will match the github repos, with nothing extraneous.
+The original git content in \source will not be modified during the build.
 
 Instructions follow:
 
