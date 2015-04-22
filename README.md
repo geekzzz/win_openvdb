@@ -45,16 +45,18 @@ The \source folder should contain a git clone of these forked repositories.
 
 3) ZLib - CMake and Build
 ----------------------------------------
-Source code: \code\source\zlib
-Build binaries: \code\build\zlib   <-- in \build, dont put in \source
-Click Configure, and choose "Visual Studio 10 Win64". Now click Generate.
-You should see this output:
-"Packaging for /include: D:/Codes/openvdb/build/zlib/$(Configuration)/zlib.dll -> D:/Codes/openvdb/build/zlib/lib
+Source code: \code\source\zlib<br>
+Build binaries: \code\build\zlib<br>
+Click Configure, and choose "Visual Studio 10 Win64". Now click Generate.<br>
+You should see this output:<br>
+```
+Packaging for /include: D:/Codes/openvdb/build/zlib/$(Configuration)/zlib.dll -> D:/Codes/openvdb/build/zlib/lib
 Packaging for /include: D:/Codes/openvdb/build/zlib/$(Configuration)/zlib.lib -> D:/Codes/openvdb/build/zlib/lib
 Packaging for /include: D:/Codes/openvdb/build/zlib/$(Configuration)/zlibstatic.lib -> D:/Codes/openvdb/build/zlib/lib
 Packaging for /include: D:/Codes/openvdb/source/zlib/*.h -> D:/Codes/openvdb/build/zlib/include
 Packaging for /include: D:/Codes/openvdb/build/zlib/zconf.h -> D:/Codes/openvdb/build/zlib/include
-Configuring done"
+Configuring done
+```
 
 
 WINDOWS - BUILD SYSTEM CHANGES
