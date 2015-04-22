@@ -1,8 +1,43 @@
 
-==============================================================================
+================================================================================
 Windows Build of OpenVDB 
-by lithozine
-==============================================================================
+by lithozine (April 22, 2015)
+================================================================================
+
+The repository forks named win_openexr and win_openvdb, contain updated
+CMakefiles and bug fixes to allow for building of OpenVDB on Windows.
+The following instructions show how to easily build on Windows 7 64-bit, 
+with Visual Studio 2010, in debug and release modes.
+
+Please post questions/comments to:
+  www.openvdb.org/forum, on the thread "[Solution] OpenVDB 3.0 for Win 7 64-bit / VS2010"
+
+The main idea behind this build is to keep a clear separation between 
+the source code and the final build outputs and projects. 
+
+Instructons follow:
+
+1) Create the following folder structure 
+
+\code	
+  \build
+    \boost_1_57_0	Install from boost_1_57_0-msvc-10.0-64.exe at
+                             http://sourceforge.net/projects/boost/files/boost-binaries/1.57.0/
+    \glew-1.11.0	Install from http://sourceforge.net/projects/glew/files/glew/1.11.0/
+    \glfw	Install from http://www.glfw.org/	
+    \tbb43	Install from https://www.threadingbuildingblocks.org/
+  \source
+    \zlib	Git Clone from https://github.com/rchoetzlein/zlib.git
+    \win_openvdb	Git Clone from https://github.com/rchoetzlein/win_openvdb.git
+    \win_openexr	Git Clone from https://github.com/rchoetzlein/win_openexr.git
+
+Notice that the git clone source repositories are kept separate from the build pre-requisites.
+At this point, the \build folder should contain unpacked installations of the existing libraries shown above.
+The \source folder should contain a git clone of these forked repositories.
+
+
+
+
 
 
 
