@@ -24,7 +24,7 @@ Instructions follow:
 1) Create the following folder structure
 ----------------------------------------
 ```
-\code	
+\codes
   \build
     \boost_1_57_0	  Install from boost_1_57_0-msvc-10.0-64.exe at
                     http://sourceforge.net/projects/boost/files/boost-binaries/1.57.0/
@@ -40,23 +40,81 @@ Notice that the git clone source repositories are kept separate from the build p
 At this point, the \build folder should contain unpacked installations of the existing libraries shown above.
 The \source folder should contain a git clone of these forked repositories.
 
+*NOTE* Only the base path \codes can be renamed or relocated. All the paths inside, includig \build and \source, and their sub-folders must follow the above structure. The names \build and \source must not be changed.
+
 2) Install and start CMake-gui, version 2.8.12 or later
 ----------------------------------------
 
 3) ZLib - CMake and Build
 ----------------------------------------
-Source code: \code\source\zlib<br>
-Build binaries: \code\build\zlib<br>
-Click Configure, and choose "Visual Studio 10 Win64". Now click Generate.<br>
+3.1. Run cmake-gui, and specify the following source and build paths:<br>
+Source code: \codes\source\zlib<br>
+Build binaries: \codes\build\zlib<br>
+3.2. Click Configure, and choose "Visual Studio 10 Win64". <br>
+3.3. Now click Generate.<br>
 You should see this output:<br>
 ```
-Packaging for /include: D:/Codes/openvdb/build/zlib/$(Configuration)/zlib.dll -> D:/Codes/openvdb/build/zlib/lib
-Packaging for /include: D:/Codes/openvdb/build/zlib/$(Configuration)/zlib.lib -> D:/Codes/openvdb/build/zlib/lib
-Packaging for /include: D:/Codes/openvdb/build/zlib/$(Configuration)/zlibstatic.lib -> D:/Codes/openvdb/build/zlib/lib
-Packaging for /include: D:/Codes/openvdb/source/zlib/*.h -> D:/Codes/openvdb/build/zlib/include
-Packaging for /include: D:/Codes/openvdb/build/zlib/zconf.h -> D:/Codes/openvdb/build/zlib/include
+Packaging for /include: D:/Codes/build/zlib/$(Configuration)/zlib.dll -> D:/Codes/build/zlib/lib
+Packaging for /include: D:/Codes/build/zlib/$(Configuration)/zlib.lib -> D:/Codes/build/zlib/lib
+Packaging for /include: D:/Codes/build/zlib/$(Configuration)/zlibstatic.lib -> D:/Codes/build/zlib/lib
+Packaging for /include: D:/Codes/source/zlib/*.h -> D:/Codes/build/zlib/include
+Packaging for /include: D:/Codes/build/zlib/zconf.h -> D:/Codes/build/zlib/include
 Configuring done
+Generating done
 ```
+3.4. Go to the path \code\build\zlib, and open zlib.sln in VS2010
+3.5. Select "Release" mode, 64-bit, and Build all.. Should have 6 succeeded, 0 failed.
+
+4) IlmBase - CMake and Build
+-------------------------------------
+4.1. Run cmake-gui, and specify the following source and build paths:<br>
+Source code: \codes\source\win_openexr\IlmBase<br>
+Build binaries: \codes\build\IlmBase<br>
+4.2. Click Configure, and choose "Visual Studio 10 Win64". <br>
+4.3. Now click Generate. <br>
+You should see this output:<br>
+```
+Packaging for /include: D:/Codes/build/IlmBase/Half/$(Configuration)/Half.dll -> D:/Codes/build/IlmBase/lib
+Packaging for /include: D:/Codes/build/IlmBase/Half/$(Configuration)/Half.lib -> D:/Codes/build/IlmBase/lib
+Packaging for /include: D:/Codes/source/win_openexr/IlmBase/Half/*.h -> D:/Codes/build/IlmBase/include
+Packaging for /include: D:/Codes/build/IlmBase/Iex/$(Configuration)/Iex.dll -> D:/Codes/build/IlmBase/lib
+Packaging for /include: D:/Codes/build/IlmBase/Iex/$(Configuration)/Iex.lib -> D:/Codes/build/IlmBase/lib
+Packaging for /include: D:/Codes/source/win_openexr/IlmBase/Iex/*.h -> D:/Codes/build/IlmBase/include
+Packaging for /include: D:/Codes/build/IlmBase/IexMath/$(Configuration)/IexMath.dll -> D:/Codes/build/IlmBase/lib
+Packaging for /include: D:/Codes/build/IlmBase/IexMath/$(Configuration)/IexMath.lib -> D:/Codes/build/IlmBase/lib
+Packaging for /include: D:/Codes/source/win_openexr/IlmBase/IexMath/*.h -> D:/Codes/build/IlmBase/include
+Packaging for /include: D:/Codes/build/IlmBase/Imath/$(Configuration)/Imath.dll -> D:/Codes/build/IlmBase/lib
+Packaging for /include: D:/Codes/build/IlmBase/Imath/$(Configuration)/Imath.lib -> D:/Codes/build/IlmBase/lib
+Packaging for /include: D:/Codes/source/win_openexr/IlmBase/Imath/*.h -> D:/Codes/build/IlmBase/include
+Packaging for /include: D:/Codes/build/IlmBase/IlmThread/$(Configuration)/IlmThread.dll -> D:/Codes/build/IlmBase/lib
+Packaging for /include: D:/Codes/build/IlmBase/IlmThread/$(Configuration)/IlmThread.lib -> D:/Codes/build/IlmBase/lib
+Packaging for /include: D:/Codes/source/win_openexr/IlmBase/IlmThread/*.h -> D:/Codes/build/IlmBase/include
+Configuring done
+Generating done
+```
+4.4. Go to the path \code\build\IlmBase, and open IlmBase.sln in VS2010
+4.5. Select "Release" mode, 64-bit, and Build all.. Should have 12 succeeded, 0 failed.
+
+5) OpenEXR - CMake and Build
+-------------------------------------
+5.1. Run cmake-gui, and specify the following source and build paths:<br>
+Source code: \codes\source\win_openexr\OpenEXR<br>
+Build binaries: \codes\build\OpenEXR<br>
+5.2. Click Configure, and choose "Visual Studio 10 Win64". <br>
+5.3. Now click Generate. <br>
+You should see this output:<br>
+```
+Zlib Library: Found at D:/Codes/build/zlib/lib/zlib.lib
+IlmBase Library: Found at D:/Codes/build/IlmBase/lib/Half.lib;D:/Codes/openvdb/build/IlmBase/lib/Iex.lib;D:/Codes/build/IlmBase/lib/Imath.lib;D:/Codes/IlmBase/lib/IlmThread.lib
+ILMBASE_PACKAGE_PREFIX = D:/Codes/build/IlmBase
+Packaging for /include: D:/Codes/source/win_openexr/OpenEXR/IlmImf/*.h -> D:/Codes/build/OpenEXR/include
+Configuring done
+Generating done
+```
+5.4. Go to the path \code\build\OpenEXR, and open OpenEXR.sln in VS2010
+5.5. Select "Release" mode, 64-bit, and Build all.. Should have 15 succeeded, 0 failed.
+
+
 
 
 WINDOWS - BUILD SYSTEM CHANGES
