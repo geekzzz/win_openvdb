@@ -23,7 +23,7 @@ Instructions follow:
 
 1) Create the following folder structure
 ----------------------------------------
-
+```
 \code	
   \build
     \boost_1_57_0	  Install from boost_1_57_0-msvc-10.0-64.exe at
@@ -35,7 +35,7 @@ Instructions follow:
     \zlib           Git Clone from https://github.com/rchoetzlein/zlib.git
     \win_openvdb    Git Clone from https://github.com/rchoetzlein/win_openvdb.git
     \win_openexr    Git Clone from https://github.com/rchoetzlein/win_openexr.git
-
+```
 Notice that the git clone source repositories are kept separate from the build pre-requisites.
 At this point, the \build folder should contain unpacked installations of the existing libraries shown above.
 The \source folder should contain a git clone of these forked repositories.
