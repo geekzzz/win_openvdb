@@ -4,7 +4,7 @@ Windows Build of OpenVDB
 by lithozine (April 22, 2015)
 
 These instructions, and the repository forks named win_openexr and win_openvdb, 
-contain updated files and bug fixes to allow for building of OpenVDB on Windows.
+contain updated cmake files, packaging steps, and fixes to allow for building of OpenVDB on Windows.
 
 *NOTE*
 This build tested on Win7 64-bit, VS 2010, in 64-bit Debug and Release modes.
