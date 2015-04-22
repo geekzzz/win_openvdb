@@ -211,20 +211,6 @@ Place the .vdb file into the \build\OpenVDB\Release folder, next to vdb_render.e
 D:\codes\build\OpenVDB\Release> vdb_render bunny_cloud.vdb bunny_cloud.exr -res 1920x1080 -translate 0,0,110 -absorb 0.4,0.2,0.1 -gain 0.2 -v
 
 
-WINDOWS - BUILD SYSTEM CHANGES
-================================================================================
-The following are deeper technical notes on how the build system was
-setup for Windows - changes made the source code, new CMake modules, and
-new steps for packaging.
-* You don't need to know this to build OpenVDB for Win. This is for future reference,
-  and hopefully dev integration into the primary branch.
-
-
-
-
-
-
-
 ================================================================================
                           OpenVDB Development Repository
 ================================================================================
