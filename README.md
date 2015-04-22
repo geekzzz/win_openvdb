@@ -1,0 +1,102 @@
+
+Windows Build of OpenVDB 
+================================================================================
+by lithozine (April 22, 2015)
+
+These instructions, and the repository forks named win_openexr and win_openvdb, 
+contain updated files and bug fixes to allow for building of OpenVDB on Windows.
+
+*NOTE*
+This build tested on Win7 64-bit, VS 2010, in 64-bit Debug and Release modes.
+I will provide support for this platform config only. If you have issues with other compilers,
+other versions of windows, or 32-bit builds, please use the openvdb forums.
+
+Post questions/comments to:
+  www.openvdb.org/forum, on the thread "[Solution] OpenVDB 3.0 for Win 7 64-bit / VS2010"
+
+The main idea behind this build is to keep a clear separation between 
+the source code and the final build outputs and projects. This makes it easy to 
+wipe the current build output, while keeping the source code handy to regenerate.
+You can be certain that \source will match the github repos, with nothing extraneous.
+
+Instructions follow:
+
+1) Create the following folder structure
+----------------------------------------
+
+\code	
+  \build
+    \boost_1_57_0	  Install from boost_1_57_0-msvc-10.0-64.exe at
+                    http://sourceforge.net/projects/boost/files/boost-binaries/1.57.0/
+    \glew-1.11.0    Install from http://sourceforge.net/projects/glew/files/glew/1.11.0/
+    \glfw           Install from http://www.glfw.org/	
+    \tbb43          Install from https://www.threadingbuildingblocks.org/
+  \source
+    \zlib           Git Clone from https://github.com/rchoetzlein/zlib.git
+    \win_openvdb    Git Clone from https://github.com/rchoetzlein/win_openvdb.git
+    \win_openexr    Git Clone from https://github.com/rchoetzlein/win_openexr.git
+
+Notice that the git clone source repositories are kept separate from the build pre-requisites.
+At this point, the \build folder should contain unpacked installations of the existing libraries shown above.
+The \source folder should contain a git clone of these forked repositories.
+
+2) Install and start CMake-gui, version 2.8.12 or later
+----------------------------------------
+
+3) ZLib - CMake and Build
+----------------------------------------
+Source code: \code\source\zlib
+Build binaries: \code\build\zlib   <-- in \build, dont put in \source
+Click Configure, and choose "Visual Studio 10 Win64". Now click Generate.
+You should see this output:
+"Packaging for /include: D:/Codes/openvdb/build/zlib/$(Configuration)/zlib.dll -> D:/Codes/openvdb/build/zlib/lib
+Packaging for /include: D:/Codes/openvdb/build/zlib/$(Configuration)/zlib.lib -> D:/Codes/openvdb/build/zlib/lib
+Packaging for /include: D:/Codes/openvdb/build/zlib/$(Configuration)/zlibstatic.lib -> D:/Codes/openvdb/build/zlib/lib
+Packaging for /include: D:/Codes/openvdb/source/zlib/*.h -> D:/Codes/openvdb/build/zlib/include
+Packaging for /include: D:/Codes/openvdb/build/zlib/zconf.h -> D:/Codes/openvdb/build/zlib/include
+Configuring done"
+
+
+WINDOWS - BUILD SYSTEM CHANGES
+================================================================================
+The following are deeper technical notes on how the build system was
+setup for Windows - changes made the source code, new CMake modules, and
+new steps for packaging.
+* You don't need to know this to build OpenVDB for Win. This is for future reference,
+  and hopefully dev integration into the primary branch.
+
+
+
+
+
+
+
+================================================================================
+                          OpenVDB Development Repository
+================================================================================
+
+This GitHub repository hosts the trunk of the OpenVDB development. This implies
+that it is the newest public version with the latest features and bug fixes.
+However, it also means that it has not undergone a lot of testing and is
+generally less stable than  the production releases that we will continue to
+deliver as tar-balls at www.openvdb.org/download
+
+For documentation of the library and code examples see:
+www.openvdb.org/documentation/doxygen
+
+General discussion forum:
+http://www.openvdb.org/forum
+
+
+================================================================================
+                           Contributor License Agreement
+================================================================================
+
+Developers who wish to contribute code to be considered for inclusion in the
+OpenVDB distribution must first complete this Contributor License Agreement:
+http://www.openvdb.org/download/OpenVDBContributorLicenseAgreement.pdf
+
+and submit it to DreamWorks (directions are in the CLA). We prefer code
+submissions in the form of pull requests to this repository, and all code
+should adhere to the OpenVDB coding standards:
+http://www.openvdb.org/documentation/doxygen/codingStyle.html
