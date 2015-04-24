@@ -28,6 +28,11 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
+#ifdef _WIN32
+	#include <Windows.h>
+	#include <GL/glew.h>
+#endif
+
 #include <openvdb_viewer/Viewer.h>
 #include <iostream>
 #include <string>
@@ -81,10 +86,13 @@ usage(const char* progName, int status)
 int
 main(int argc, char *argv[])
 {
+	std::cout << "Starting vdb_view\n";
+
 #ifdef DWA_OPENVDB
     USAGETRACK_report_basic_tool_usage(argc, argv, /*duration=*/0);
     logging_base::configure(argc, argv);
 #endif
+		
 
     const char* progName = argv[0];
     if (const char* ptr = ::strrchr(progName, '/')) progName = ptr + 1;
@@ -92,11 +100,13 @@ main(int argc, char *argv[])
     int status = EXIT_SUCCESS;
 
     try {
+		printf ( "Initializing openvdb\n" );
         openvdb::initialize();
 
         bool printInfo = false, printDebugInfo = false;
 
         // Parse the command line.
+		std::cout << "Parse command line\n";
         std::vector<std::string> filenames;
         for (int n = 1; n < argc; ++n) {
             std::string str(argv[n]);
@@ -113,11 +123,10 @@ main(int argc, char *argv[])
             }
         }
 
+		std::cout << "View init\n";
         openvdb_viewer::Viewer viewer = openvdb_viewer::init(progName, /*bg=*/false);
 
-        if (printDebugInfo) {
-            std::cout << viewer.getVersionString() << std::endl;
-        }
+        std::cout << viewer.getVersionString() << std::endl;        
 
         const size_t numFiles = filenames.size();
         if (numFiles == 0) usage(progName, EXIT_FAILURE);
@@ -148,10 +157,13 @@ main(int argc, char *argv[])
                 }
             }
         }
-
+		std::cout << "Opening viewer\n";
         viewer.open();
+		
+		std::cout << "View all grids\n";
         viewer.view(allGrids);
 
+		std::cout << "Viewer exit\n";
         openvdb_viewer::exit();
 
     } catch (const char* s) {

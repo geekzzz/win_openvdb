@@ -31,6 +31,18 @@
 #ifndef OPENVDB_VIEWER_RENDERMODULES_HAS_BEEN_INCLUDED
 #define OPENVDB_VIEWER_RENDERMODULES_HAS_BEEN_INCLUDED
 
+#ifdef _WIN32
+	#include <windows.h>
+	#include <GL/glew.h>
+#endif
+#if defined(__APPLE__) || defined(MACOSX)
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#else
+#include <GL/gl.h>
+#include <GL/glu.h>
+#endif
+
 #include <openvdb/openvdb.h>
 #include <openvdb/tools/VolumeToMesh.h>
 #include <openvdb/tools/MeshToVolume.h>
@@ -40,15 +52,6 @@
 #include <openvdb/math/Operators.h>
 
 #include <boost/random/mersenne_twister.hpp>
-
-#if defined(__APPLE__) || defined(MACOSX)
-#include <OpenGL/gl.h>
-#include <OpenGL/glu.h>
-#else
-#include <GL/gl.h>
-#include <GL/glu.h>
-#endif
-
 
 namespace openvdb_viewer {
 

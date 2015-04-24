@@ -28,6 +28,24 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
+#ifdef _WIN32
+	#include <Windows.h>
+	#include <GL/glew.h>
+#endif
+#ifdef OPENVDB_USE_GLFW_3
+	//#define GLFW_INCLUDE_GLU
+	#include <GLFW/glfw3.h>
+#else // if !defined(OPENVDB_USE_GLFW_3)
+	#if defined(__APPLE__) || defined(MACOSX)
+	#include <OpenGL/gl.h>
+	#include <OpenGL/glu.h>
+	#else
+	#include <GL/gl.h>
+	#include <GL/glu.h>
+	#endif
+	#include <GL/glfw.h>
+#endif // !defined(OPENVDB_USE_GLFW_3)
+
 #include "Viewer.h"
 
 #include "Camera.h"
@@ -47,21 +65,6 @@
 #include <limits>
 #include <boost/thread/thread.hpp>
 #include <time.h> // for nanosleep()
-
-#ifdef OPENVDB_USE_GLFW_3
-//#define GLFW_INCLUDE_GLU
-#include <GLFW/glfw3.h>
-#else // if !defined(OPENVDB_USE_GLFW_3)
-#if defined(__APPLE__) || defined(MACOSX)
-#include <OpenGL/gl.h>
-#include <OpenGL/glu.h>
-#else
-#include <GL/gl.h>
-#include <GL/glu.h>
-#endif
-#include <GL/glfw.h>
-#endif // !defined(OPENVDB_USE_GLFW_3)
-
 
 namespace openvdb_viewer {
 
@@ -313,6 +316,7 @@ Viewer::open(int width, int height)
 void
 Viewer::view(const openvdb::GridCPtrVec& grids)
 {
+	std::cout << "Viewer::view\n";
     if (sThreadMgr) {
         sThreadMgr->view(grids);
     } else if (sViewer) {
@@ -366,6 +370,7 @@ ThreadManager::ThreadManager()
 void
 ThreadManager::view(const openvdb::GridCPtrVec& gridList)
 {
+	std::cout << "ThreadMgr::view\n";
     if (!sViewer) return;
 
     mGrids = gridList;
@@ -520,12 +525,16 @@ bool
 ViewerImpl::open(int width, int height)
 {
     if (mWindow == NULL) {
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);		// glfw3, required to start glewInit on Windows
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
         glfwWindowHint(GLFW_RED_BITS, 8);
         glfwWindowHint(GLFW_GREEN_BITS, 8);
         glfwWindowHint(GLFW_BLUE_BITS, 8);
         glfwWindowHint(GLFW_ALPHA_BITS, 8);
         glfwWindowHint(GLFW_DEPTH_BITS, 32);
         glfwWindowHint(GLFW_STENCIL_BITS, 0);
+		
 
         mWindow = glfwCreateWindow(
             width, height, mProgName.c_str(), /*monitor=*/NULL, /*share=*/NULL);
@@ -533,11 +542,26 @@ ViewerImpl::open(int width, int height)
         OPENVDB_LOG_DEBUG_RUNTIME("created window " << std::hex << mWindow << std::dec
             << " from thread " << boost::this_thread::get_id());
 
+
         if (mWindow != NULL) {
             // Temporarily make the new window the current context, then create a font.
             boost::shared_ptr<GLFWwindow> curWindow(
                 glfwGetCurrentContext(), glfwMakeContextCurrent);
             glfwMakeContextCurrent(mWindow);
+
+
+			#ifdef _WIN32
+				std::cout << "Glew init (Windows)\n";			// must happen after opengl create context create
+				glewExperimental=GL_TRUE;
+				GLenum err = glewInit();
+				if ( err != GLEW_OK ) {
+					std::cout << "ERROR: Glew init failed.";
+					std::cout << glewGetErrorString(err);
+					exit();
+				}
+			#endif
+
+
             BitmapFont13::initialize();
         }
     }
@@ -550,6 +574,8 @@ ViewerImpl::open(int width, int height)
         glfwSetScrollCallback(mWindow, mouseWheelCB);
         glfwSetWindowSizeCallback(mWindow, windowSizeCB);
         glfwSetWindowRefreshCallback(mWindow, windowRefreshCB);
+		glfwSetWindowTitle( mWindow, "vdb_view");
+		glfwShowWindow ( mWindow );
     }
     return (mWindow != NULL);
 }
@@ -834,10 +860,14 @@ ViewerImpl::render()
 void
 ViewerImpl::sleep(double secs)
 {
-    secs = fabs(secs);
-    int isecs = int(secs);
-    struct timespec sleepTime = { isecs /*sec*/, int(1.0e9 * (secs - isecs)) /*nsec*/ };
-    nanosleep(&sleepTime, /*remainingTime=*/NULL);
+	#ifdef _WIN32
+		Sleep ( secs * 1000.0 );		// windows sleep in ms
+	#else
+		secs = fabs(secs);
+		int isecs = int(secs);
+		struct timespec sleepTime = { isecs /*sec*/, int(1.0e9 * (secs - isecs)) /*nsec*/ };
+		nanosleep(&sleepTime, /*remainingTime=*/NULL);
+	#endif
 }
 
 

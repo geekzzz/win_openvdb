@@ -32,19 +32,27 @@
 
 #include <cmath>
 
-#ifdef OPENVDB_USE_GLFW_3
-#define GLFW_INCLUDE_GLU
-#include <GLFW/glfw3.h>
-#else // if !defined(OPENVDB_USE_GLFW_3)
-#if defined(__APPLE__) || defined(MACOSX)
-#include <OpenGL/gl.h>
-#include <OpenGL/glu.h>
-#else
-#include <GL/gl.h>
-#include <GL/glu.h>
+#ifdef _WIN32
+	#include <windows.h>
 #endif
-#include <GL/glfw.h>
-#endif // !defined(OPENVDB_USE_GLFW_3)
+
+#ifdef OPENVDB_USE_GLFW_3
+	// use glfw_3
+	#define GLFW_INCLUDE_GLU
+	#include <GLFW/glfw3.h>
+#else 
+	// use plain glfw
+	#if defined(__APPLE__) || defined(MACOSX)
+	   // apple & macosx
+		#include <OpenGL/gl.h>
+		#include <OpenGL/glu.h>
+	#else
+		// windows & linux
+		#include <GL/gl.h>
+		#include <GL/glu.h>
+	#endif
+	#include <GL/glfw.h>
+#endif		
 
 
 namespace openvdb_viewer {
