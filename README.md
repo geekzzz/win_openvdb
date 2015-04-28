@@ -214,10 +214,10 @@ Build OpenVDB COOKBOOK Project
 -------------------------------------
 The win_openvdb fork also includes a project for the OpenVDB Cookbook example #1.<br>
 The source is located in \win_openvdb\openvdb_cookbook.<br>
-The follow shows automated CMake steps for building this project. I would strongly recommend that you become familiar with CMake, as it will greatly simplify your life. Look at \openvdb_cookbook\CMakeLists.txt. It is a simple example that shows how each aspect of a build can be specified in a cmake. <br>
+The following shows automated CMake steps for building this project. I would strongly recommend that you become familiar with CMake, as it will greatly simplify your life. Look at \openvdb_cookbook\CMakeLists.txt. It is a simple example that shows how each aspect of a build can be specified in a cmake. <br>
 *NOTE* If you really want to create your own Visual Studio .sln and .vxproj, to really write the cookbook example from scratch, you can also do this. You must then explicitly set the correct include paths, input libraries, and preprocessor defines so that all the needed libraries are found.<br>
 <br>
-The steps for creating the Cookbook project art:
+The steps for creating the Cookbook project art thou:<br>
 1. Run cmake-gui, and specify the following source and build paths:<br>
 Source code: \codes\source\win_openvdb\openvdb_cookbook<br>
 Build binaries: \codes\build\openvdb_cookbook<br>
@@ -251,8 +251,9 @@ Generating done
 ```
 4. Go to the path \code\build\openvdb_cookbook, and open OpenVDB_Cookbook.sln in VS2010<br>
 5. Select "Debug" or "Release" mode, 64-bit, and Build all.<br>
-6. Make sure that "openvdb_cookbook" project is set as the Startup project (right-click it and set as Startup Project)
-7. Run!
+6. Make sure that "openvdb_cookbook" project is set as the Startup project (right-click it and set as Startup Project)<br>
+7. Run! <br>
+*NOTE* If the console flashes briefly, this is correct. The sample does not wait for input on exit. To see it better, try Debug -> Start Without Debugging, or add a _getch() as the last line of  main()<br>
 
 
 
