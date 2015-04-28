@@ -160,7 +160,7 @@ Generating done
 6.4. Go to the path \code\build\OpenVDB, and open OpenVDB.sln in VS2010<br>
 6.5. Select "Release" mode, 64-bit, and Build all.. Should have 5 succeeded, 2 failed.<br>
 
-7) Check and Try it!
+7) Check it and Try it!
 -------------------------------------
 This build system was designed to do everything automatically. When finished, you should have an openvdb.lib and openvdb.dll which you can use in other projects, and an vdb_render.exe which will confirm the build.<br>
 Other things to observe:<br>
@@ -209,6 +209,51 @@ zlib.dll            DLL required for openvdb
 Place the .vdb file into the \build\OpenVDB\Release folder, next to vdb_render.exe<br>
 7.5. From the command-line run this:<br>
 D:\codes\build\OpenVDB\Release> vdb_render bunny_cloud.vdb bunny_cloud.exr -res 1920x1080 -translate 0,0,110 -absorb 0.4,0.2,0.1 -gain 0.2 -v
+
+Build OpenVDB COOKBOOK Project
+-------------------------------------
+The win_openvdb fork also includes a project for the OpenVDB Cookbook example #1.<br>
+The source is located in \win_openvdb\openvdb_cookbook.<br>
+The follow shows automated CMake steps for building this project. I would strongly recommend that you become familiar with CMake, as it will greatly simplify your life. Look at \openvdb_cookbook\CMakeLists.txt. It is a simple example that shows how each aspect of a build can be specified in a cmake. <br>
+*NOTE* If you really want to create your own Visual Studio .sln and .vxproj, to really write the cookbook example from scratch, you can also do this. You must then explicitly set the correct include paths, input libraries, and preprocessor defines so that all the needed libraries are found.<br>
+<br>
+The steps for creating the Cookbook project art:
+1. Run cmake-gui, and specify the following source and build paths:<br>
+Source code: \codes\source\win_openvdb\openvdb_cookbook<br>
+Build binaries: \codes\build\openvdb_cookbook<br>
+2. Click Configure, and choose "Visual Studio 10 Win64". <br>
+3. Now click Generate. <br>
+You should see this output:<br>
+```
+TBB Compiler:    vc10 
+TBB Library: Found at D:/Codes/build/tbb43/lib/intel64/vc10/tbb.lib
+Zlib Library: Found at D:/Codes/build/zlib/lib/zlib.lib
+Packaging: D:/Codes/build/OpenEXR/lib/IlmImf.dll -> D:/Codes/build/OpenVDB_cookbook/Release
+Packaging: D:/Codes/build/IlmBase/lib/Half.dll -> D:/Codes/build/OpenVDB_cookbook/Release
+Packaging: D:/Codes/build/IlmBase/lib/Iex.dll -> D:/Codes/build/OpenVDB_cookbook/Release
+Packaging: D:/Codes/build/IlmBase/lib/Imath.dll -> D:/Codes/build/OpenVDB_cookbook/Release
+Packaging: D:/Codes/build/IlmBase/lib/IlmThread.dll -> D:/Codes/build/OpenVDB_cookbook/Release
+Packaging: D:/Codes/build/zlib/lib/zlib.dll -> D:/Codes/build/OpenVDB_cookbook/Release
+Packaging: D:/Codes/build/tbb43/bin/intel64/vc10/*.dll -> D:/Codes/build/OpenVDB_cookbook/Release
+Packaging: D:/Codes/build/boost_1_57_0/lib64-msvc-10.0/boost_system*.dll -> D:/Codes/build/OpenVDB_cookbook/Release
+Packaging: D:/Codes/build/boost_1_57_0/lib64-msvc-10.0/boost_thread*.dll -> D:/Codes/build/OpenVDB_cookbook/Release
+Packaging: D:/Codes/build/OpenEXR/lib/IlmImf.dll -> D:/Codes/build/OpenVDB_cookbook/Debug
+Packaging: D:/Codes/build/IlmBase/lib/Half.dll -> D:/Codes/build/OpenVDB_cookbook/Debug
+Packaging: D:/Codes/build/IlmBase/lib/Iex.dll -> D:/Codes/build/OpenVDB_cookbook/Debug
+Packaging: D:/Codes/build/IlmBase/lib/Imath.dll -> D:/Codes/build/OpenVDB_cookbook/Debug
+Packaging: D:/Codes/build/IlmBase/lib/IlmThread.dll -> D:/Codes/build/OpenVDB_cookbook/Debug
+Packaging: D:/Codes/build/zlib/lib/zlib.dll -> D:/Codes/build/OpenVDB_cookbook/Debug
+Packaging: D:/Codes/build/tbb43/bin/intel64/vc10/*.dll -> D:/Codes/build/OpenVDB_cookbook/Debug
+Packaging: D:/Codes/build/boost_1_57_0/lib64-msvc-10.0/boost_system*.dll -> D:/Codes/build/OpenVDB_cookbook/Debug
+Packaging: D:/Codes/build/boost_1_57_0/lib64-msvc-10.0/boost_thread*.dll -> D:/Codes/build/OpenVDB_cookbook/Debug
+Configuring done
+Generating done
+```
+4. Go to the path \code\build\openvdb_cookbook, and open OpenVDB_Cookbook.sln in VS2010<br>
+5. Select "Debug" or "Release" mode, 64-bit, and Build all.<br>
+6. Make sure that "openvdb_cookbook" project is set as the Startup project (right-click it and set as Startup Project)
+7. Run!
+
 
 
 ================================================================================
