@@ -213,6 +213,7 @@ D:\codes\build\OpenVDB\Release> vdb_render bunny_cloud.vdb bunny_cloud.exr -res 
 Build OpenVDB COOKBOOK Project
 -------------------------------------
 The win_openvdb fork also includes a project for the OpenVDB Cookbook example #1.<br>
+   http://www.openvdb.org/documentation/doxygen/codeExamples.html
 The source is located in \win_openvdb\openvdb_cookbook.<br>
 The following shows automated CMake steps for building this project. I would strongly recommend that you become familiar with CMake, as it will greatly simplify your life. Look at \openvdb_cookbook\CMakeLists.txt. It is a simple example that shows how each aspect of a build can be specified in a cmake. <br>
 *NOTE* If you really want to create your own Visual Studio .sln and .vxproj, to really write the cookbook example from scratch, you can also do this. You must then explicitly set the correct include paths, input libraries, and preprocessor defines so that all the needed libraries are found.<br>
