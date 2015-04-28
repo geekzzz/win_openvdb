@@ -62,8 +62,16 @@ macro (PREFIX_FIND_LIB prefix libname libpath_var liblist_var cachelist_var)
     PATHS ${${libpath_var}}
     PATH_SUFFIXES lib
   )
+  if ( NOT ${tmp_prefix}_LIBRARY_DEBUG )
+    # try using release lib if debugs are not found
+    find_library(${tmp_prefix}_LIBRARY_DEBUG
+      NAMES ${libname} ${libname} ${libname} ${libname}
+      PATHS ${${libpath_var}}
+      PATH_SUFFIXES lib
+    )
+  endif()
   # Properly define ${tmp_prefix}_LIBRARY (cached) and ${tmp_prefix}_LIBRARIES
-  select_library_configurations (${tmp_prefix})
+  # select_library_configurations (${tmp_prefix})
   list (APPEND ${liblist_var} ${tmp_prefix}_LIBRARIES)
 
   # Add to the list of variables which should be reset
@@ -195,7 +203,7 @@ if (OPENEXR_FOUND)
   endforeach ()
   list (APPEND OPENEXR_LIBRARIES ${ZLIB_LIBRARIES})
   
-   message ( STATUS "OpenEXR Library: Fount at ${OPENEXR_LIBRARIES}" )
+   message ( STATUS "OpenEXR Library: Found at ${OPENEXR_LIBRARIES}" )
   
   # -- original method (not used) --
   # FIND_PACKAGE_MESSAGE (OPENEXR

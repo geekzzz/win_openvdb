@@ -1,15 +1,15 @@
 
 # Windows OpenVDB cmake
-# for win_openvdb fork by: lithozine (ramahoetzlein@gmail.com)
-# original by yue.nicholas@gmail.com
-
+# April 2015, win_openvdb fork by: 
+#    lithozine (ramahoetzlein@gmail.com)
+# based on original by yue.nicholas@gmail.com
 
 macro (POST_COPY SRC_TARGET SRC_PATH SRC_MATCH DEST_DIR)
   # Make sure dir exists
   MAKE_DIRECTORY ( "${DEST_DIR}" )
   
   # Locate all files matching pattern
-  message ( STATUS "Packaging for /include: ${SRC_PATH}/${SRC_MATCH} -> ${DEST_DIR}" )    
+  message ( STATUS "Packaging: ${SRC_PATH}/${SRC_MATCH} -> ${DEST_DIR}" )    
   if ( "${SRC_MATCH}" MATCHES "(.*)\\*(.*)" )  
      # wildcard given, find all matching files (MUST EXIST NOW, AT CMAKE TIME, BEFORE BUILD)
      FILE ( GLOB src_list ABSOLUTE "${SRC_PATH}/${SRC_MATCH}" )
@@ -176,7 +176,7 @@ TARGET_LINK_LIBRARIES ( openvdb optimized
 SET ( VDB_PRINT_SOURCE_FILES  cmd/openvdb_print/main.cc )
 SET_SOURCE_FILES_PROPERTIES ( ${VDB_PRINT_SOURCE_FILES}
   PROPERTIES
-  COMPILE_FLAGS "${OPENVDB_USE_GLFW_FLAG}"
+  COMPILE_FLAGS "${OPENVDB_USE_GLFW_FLAG} /bigobj"
 )
 
 ADD_EXECUTABLE ( vdb_print
@@ -236,6 +236,17 @@ POST_COPY ( vdb_render ${TBB_BINARY_DIR} *.dll "${CMAKE_BINARY_DIR}/Debug" )
 POST_COPY ( vdb_render ${Boost_LIBRARY_DIR_DEBUG} boost_system*.dll "${CMAKE_BINARY_DIR}/Debug" )
 POST_COPY ( vdb_render ${Boost_LIBRARY_DIR_DEBUG} boost_thread*.dll "${CMAKE_BINARY_DIR}/Debug" )
 
+# Package OpenVDB headers and libs
+POST_COPY ( openvdb ${CMAKE_CURRENT_SOURCE_DIR} *.h "${CMAKE_BINARY_DIR}/include/" )
+POST_COPY ( openvdb ${CMAKE_CURRENT_SOURCE_DIR} *.h "${CMAKE_BINARY_DIR}/include/openvdb" )
+POST_COPY ( openvdb "${CMAKE_CURRENT_SOURCE_DIR}/math" *.h "${CMAKE_BINARY_DIR}/include/openvdb/math" )
+POST_COPY ( openvdb "${CMAKE_CURRENT_SOURCE_DIR}/io" *.h "${CMAKE_BINARY_DIR}/include/openvdb/io" )
+POST_COPY ( openvdb "${CMAKE_CURRENT_SOURCE_DIR}/tree" *.h "${CMAKE_BINARY_DIR}/include/openvdb/tree" )
+POST_COPY ( openvdb "${CMAKE_CURRENT_SOURCE_DIR}/tools" *.h "${CMAKE_BINARY_DIR}/include/openvdb/tools" )
+POST_COPY ( openvdb "${CMAKE_CURRENT_SOURCE_DIR}/util" *.h "${CMAKE_BINARY_DIR}/include/openvdb/util" )
+POST_COPY ( openvdb "${CMAKE_CURRENT_SOURCE_DIR}/metadata" *.h "${CMAKE_BINARY_DIR}/include/openvdb/metadata" )
+POST_COPY ( openvdb ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR} openvdb.lib "${CMAKE_BINARY_DIR}/lib" )
+# POST_COPY ( openvdb ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR} openvdb.dll "${CMAKE_BINARY_DIR}/lib" )
   
 SET ( VDB_VIEW_SOURCE_FILES
   cmd/openvdb_view/main.cc

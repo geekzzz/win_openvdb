@@ -216,7 +216,7 @@ if (ILMBASE_FOUND)
     list (APPEND ILMBASE_LIBRARIES ${${tmplib}})
   endforeach ()
   list (APPEND ILMBASE_LIBRARIES ${ILMBASE_PTHREADS})
-  message ( STATUS "IlmBase Library: Fount at ${ILMBASE_LIBRARIES}" )
+  message ( STATUS "IlmBase Library: Found at ${ILMBASE_LIBRARIES}" )
 
   # -- original method (not used)
   #  FIND_PACKAGE_MESSAGE (ILMBASE

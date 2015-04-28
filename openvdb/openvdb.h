@@ -34,12 +34,11 @@
 #include "Platform.h"
 #include "Types.h"
 #include "Metadata.h"
-#include "math/Maps.h"
-#include "math/Transform.h"
 #include "Grid.h"
-#include "tree/Tree.h"
-#include "io/File.h"
-
+#include "openvdb/math/Maps.h"
+#include "openvdb/math/Transform.h"
+#include "openvdb/tree/Tree.h"
+#include "openvdb/io/File.h"
 
 namespace openvdb {
 OPENVDB_USE_VERSION_NAMESPACE
