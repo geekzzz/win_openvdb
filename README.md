@@ -255,9 +255,9 @@ Generating done
 7. Run! <br>
 *NOTE* If the console flashes briefly, this is correct. The sample does not wait for input on exit. To see it better, try Debug -> Start Without Debugging, or add a _getch() as the last line of  main()<br>
 <br>
-Troubleshooting:
-Q: What to do about LINK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL' value 'X' doesn't match value 'Y'
-A: For the cookbook project, this is usually caused building the OpenVDB.lib as a debug library instead of release. The cookbook expects to use the release version of openvdb.lib. If you would like to use OpenVDB.lib as debug, then you can modify the CMakelist.txt for openvdb_cookbook, find the line for _ITERATOR_DEBUG_LEVEL, and set it to '2' instead of '0'.
+Troubleshooting:<br>
+Q: What to do about LINK2038: mismatch detected for '_ITERATOR_DEBUG_LEVEL' value 'X' doesn't match value 'Y'<br>
+A: For the cookbook project, this is usually caused building the OpenVDB.lib as a debug library instead of release. The cookbook expects to use the release version of openvdb.lib. If you would like to use OpenVDB.lib as debug, then you can modify the CMakelist.txt for openvdb_cookbook, find the line for _ITERATOR_DEBUG_LEVEL, and set it to '2' instead of '0'.<br>
 
 
 
