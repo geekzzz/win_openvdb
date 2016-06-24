@@ -186,6 +186,7 @@ https://cloud.githubusercontent.com/assets/14851941/16338275/8d0b6d86-3a56-11e6-
 
 6.5. Go to the path \code\build\OpenVDB, and open OpenVDB.sln in VS2015<br>
 6.6. Before building sln ,you should include zlib.h in project openvdb and include GL/glew.h in vdb_view project ,if the unresolved external symbol error of glfw occurs ,you should modify the path of glfw lib in corresponding project property pages ,c/c++ --General--Additional Include Directories
+
 6.7. Select "Release" mode, 64-bit, and Build all.. Should have 6 succeeded, 1 failed.<br>
 
 7) Check it and Try it!
