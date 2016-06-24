@@ -93,7 +93,7 @@ Generating done
 4.4. Go to the path \code\build\IlmBase, and open IlmBase.sln in VS2015<br>
 4.5. Select "Release" mode, x64, and Build all.. Should have 12 succeeded, 0 failed.<br>
 
-5) OpenEXR - CMake and Build   here problems may occur 
+5) OpenEXR - CMake and Build   Here problems may occur 
 -------------------------------------
 5.1. Run cmake-gui, and specify the following source and build paths:<br>
 Source code: \codes\source\win_openexr\OpenEXR<br>
@@ -182,10 +182,11 @@ See also "E:/lib/codes-openvdb/build/OpenVDB/CMakeFiles/CMakeOutput.log".
 ```
 6.4.Based on the above errors ,you should include path for NOTFOUND values including TBB and Boost in Name column
 you can refer to this URL to see the path for TBB and Boost and glfw :
-
+https://cloud.githubusercontent.com/assets/14851941/16338275/8d0b6d86-3a56-11e6-91ae-40299e2a474c.png
 
 6.5. Go to the path \code\build\OpenVDB, and open OpenVDB.sln in VS2015<br>
-6.6. Select "Release" mode, 64-bit, and Build all.. Should have 6 succeeded, 1 failed.<br>
+6.6. Before building sln ,you should include zlib.h in project openvdb and include GL/glew.h in vdb_view project ,if the unresolved external symbol error of glfw occurs ,you should modify the path of glfw lib in corresponding project property pages ,c/c++ --General--Additional Include Directories
+6.7. Select "Release" mode, 64-bit, and Build all.. Should have 6 succeeded, 1 failed.<br>
 
 7) Check it and Try it!
 -------------------------------------
@@ -195,13 +196,13 @@ Other things to observe:<br>
 ```
 \codes
   \build
-    \boost_1_57_0
+    \boost_1_61_0
     \glew-1.11.0
     \glfw
     \IlmBase
     \OpenEXR
     \OpenVDB
-    \tbb43
+    \tbb44
     \zlib
 ```
 Of course, the \source should remain identical to what it was from github. It is not modified during build.<br>
@@ -218,8 +219,8 @@ Here you will find the openvdb.lib, vdb_print.exe and vdb_render.exe for testing
 vdb_render.exe      VDB Render sample, to confirm it all works.
 vdb_print.exe       VDB Print sample
 openvdb.lib         Link library for projects using openvdb
-openvdb.dll         DLL library for projects using openvdb
-boost_system-vc100-mt-1.57.dll    DLL required for openvdb
+openvdb.dll         DLL library for projects using openvdb( actually  I  don't have this dll in release folder )
+boost_system-vc140-mt-1_61.dll    DLL required for openvdb
 Half.dll            DLL required for openvdb
 Iex.dll             DLL required for openvdb
 IlmImf.dll          DLL required for openvdb
@@ -235,7 +236,7 @@ zlib.dll            DLL required for openvdb
    http://www.openvdb.org/download/<br>
 Place the .vdb file into the \build\OpenVDB\Release folder, next to vdb_render.exe<br>
 7.5. From the command-line run this:<br>
-D:\codes\build\OpenVDB\Release> vdb_render bunny_cloud.vdb bunny_cloud.exr -res 1920x1080 -translate 0,0,110 -absorb 0.4,0.2,0.1 -gain 0.2 -v
+\codes\build\OpenVDB\Release> vdb_render bunny_cloud.vdb bunny_cloud.exr -res 1920x1080 -translate 0,0,110 -absorb 0.4,0.2,0.1 -gain 0.2 -v
 
 Build OpenVDB COOKBOOK Project
 -------------------------------------
@@ -248,35 +249,9 @@ The steps for creating the Cookbook project art thou:<br>
 1. Run cmake-gui, and specify the following source and build paths:<br>
 Source code: \codes\source\win_openvdb\openvdb_cookbook<br>
 Build binaries: \codes\build\openvdb_cookbook<br>
-2. Click Configure, and choose "Visual Studio 10 Win64". <br>
+2. Click Configure, and choose "Visual Studio 14 2015 Win64". <br>
 3. Now click Generate. <br>
-You should see this output:<br>
-```
-TBB Compiler:    vc10 
-TBB Library: Found at D:/Codes/build/tbb43/lib/intel64/vc10/tbb.lib
-Zlib Library: Found at D:/Codes/build/zlib/lib/zlib.lib
-Packaging: D:/Codes/build/OpenEXR/lib/IlmImf.dll -> D:/Codes/build/OpenVDB_cookbook/Release
-Packaging: D:/Codes/build/IlmBase/lib/Half.dll -> D:/Codes/build/OpenVDB_cookbook/Release
-Packaging: D:/Codes/build/IlmBase/lib/Iex.dll -> D:/Codes/build/OpenVDB_cookbook/Release
-Packaging: D:/Codes/build/IlmBase/lib/Imath.dll -> D:/Codes/build/OpenVDB_cookbook/Release
-Packaging: D:/Codes/build/IlmBase/lib/IlmThread.dll -> D:/Codes/build/OpenVDB_cookbook/Release
-Packaging: D:/Codes/build/zlib/lib/zlib.dll -> D:/Codes/build/OpenVDB_cookbook/Release
-Packaging: D:/Codes/build/tbb43/bin/intel64/vc10/*.dll -> D:/Codes/build/OpenVDB_cookbook/Release
-Packaging: D:/Codes/build/boost_1_57_0/lib64-msvc-10.0/boost_system*.dll -> D:/Codes/build/OpenVDB_cookbook/Release
-Packaging: D:/Codes/build/boost_1_57_0/lib64-msvc-10.0/boost_thread*.dll -> D:/Codes/build/OpenVDB_cookbook/Release
-Packaging: D:/Codes/build/OpenEXR/lib/IlmImf.dll -> D:/Codes/build/OpenVDB_cookbook/Debug
-Packaging: D:/Codes/build/IlmBase/lib/Half.dll -> D:/Codes/build/OpenVDB_cookbook/Debug
-Packaging: D:/Codes/build/IlmBase/lib/Iex.dll -> D:/Codes/build/OpenVDB_cookbook/Debug
-Packaging: D:/Codes/build/IlmBase/lib/Imath.dll -> D:/Codes/build/OpenVDB_cookbook/Debug
-Packaging: D:/Codes/build/IlmBase/lib/IlmThread.dll -> D:/Codes/build/OpenVDB_cookbook/Debug
-Packaging: D:/Codes/build/zlib/lib/zlib.dll -> D:/Codes/build/OpenVDB_cookbook/Debug
-Packaging: D:/Codes/build/tbb43/bin/intel64/vc10/*.dll -> D:/Codes/build/OpenVDB_cookbook/Debug
-Packaging: D:/Codes/build/boost_1_57_0/lib64-msvc-10.0/boost_system*.dll -> D:/Codes/build/OpenVDB_cookbook/Debug
-Packaging: D:/Codes/build/boost_1_57_0/lib64-msvc-10.0/boost_thread*.dll -> D:/Codes/build/OpenVDB_cookbook/Debug
-Configuring done
-Generating done
-```
-4. Go to the path \code\build\openvdb_cookbook, and open OpenVDB_Cookbook.sln in VS2010<br>
+4. Go to the path \code\build\openvdb_cookbook, and open OpenVDB_Cookbook.sln in VS2015<br>
 5. Select "Debug" or "Release" mode, 64-bit, and Build all.<br>
 6. Make sure that "openvdb_cookbook" project is set as the Startup project (right-click it and set as Startup Project)<br>
 7. Run! <br>
