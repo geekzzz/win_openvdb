@@ -1,18 +1,15 @@
 
-Windows Build of OpenVDB 
+Windows Build of OpenVDB 3.0.0
 ================================================================================
-by lithozine (April 22, 2015)
+by yuyonghang (June 24, 2016)
 
-These instructions, and the repository forks named win_openexr and win_openvdb, 
-contain updated cmake files, packaging steps, and fixes to allow for building of OpenVDB on Windows.
+The repository forks named win_openexr and win_openvdb, contain updated cmake files, packaging steps, and fixes to allow for building of OpenVDB on Windows.
+The following instructions is the modification of rchoetzlein's instructions on  windows build of openvdb,folked from https://github.com/rchoetzlein/win_openvdb
 
 *NOTE*
-This build tested on Win7 64-bit, VS 2010, in 64-bit Debug and Release modes.
-I will provide support for this platform config only. If you have issues with other compilers,
-other versions of windows, or 32-bit builds, please use the openvdb forums.
+This build is tested on Win10 64-bit, VS 2015, in 64-bit Release modes.The solution of error during build is also provided.
 
-Post questions/comments to:
-  www.openvdb.org/forum, on the thread "[Solution] OpenVDB 3.0 for Win 7 64-bit / VS2010"
+
 
 The main idea behind this build is to keep a clear separation between 
 the source code and the final build outputs and projects. This makes it easy to 
@@ -21,17 +18,17 @@ The original git content in \source will not be modified during the build.
 
 Instructions follow:
 
-1) Create the following folder structure
+1) Create the following folder structure ,the root directory is called codes folder,and contains two sub-folders including build and source folder    build folder contains binary libs and source folder contains source code to be built
 ----------------------------------------
 Retrieve the packages from the links provided, and use git clone for the \source repos.
 ```
 \codes
   \build
-    \boost_1_57_0	  Install from boost_1_57_0-msvc-10.0-64.exe at
-                    http://sourceforge.net/projects/boost/files/boost-binaries/1.57.0/
+    \boost_1_61_0	  Install from boost_1_61_0-msvc-14.0-64.exe at
+                    https://sourceforge.net/projects/boost/files/boost-binaries/1.61.0/
     \glew-1.11.0    Install from http://sourceforge.net/projects/glew/files/glew/1.11.0/
     \glfw           Install from http://www.glfw.org/	
-    \tbb43          Install from https://www.threadingbuildingblocks.org/
+    \tbb44          Install from https://www.threadingbuildingblocks.org/
   \source
     \zlib           Git Clone from https://github.com/rchoetzlein/zlib.git
     \win_openvdb    Git Clone from https://github.com/rchoetzlein/win_openvdb.git
@@ -39,11 +36,11 @@ Retrieve the packages from the links provided, and use git clone for the \source
 ```
 Notice that the git clone source repositories are kept separate from the build pre-requisites.
 At this point, the \build folder should contain unpacked installations of the existing libraries shown above.
-The \source folder should contain a git clone of these forked repositories.
+The \source folder should contain a git clone of these forked repositories. Using git clone command.
 
 *NOTE* Only the base path \codes can be renamed or relocated. All the paths inside, includig \build and \source, and their sub-folders must follow the above structure. The names \build and \source must not be changed.
 
-2) Install and start CMake-gui, version 2.8.12 or later
+2) Install and start CMake-gui, version 2.8.12 or later   https://cmake.org/download/
 ----------------------------------------
 
 3) ZLib - CMake and Build
@@ -51,114 +48,144 @@ The \source folder should contain a git clone of these forked repositories.
 3.1. Run cmake-gui, and specify the following source and build paths:<br>
 Source code: \codes\source\zlib<br>
 Build binaries: \codes\build\zlib<br>
-3.2. Click Configure, and choose "Visual Studio 10 Win64". <br>
+3.2. Click Configure, and choose "Visual Studio 14 2015 Win64". <br>
 3.3. Now click Generate.<br>
 You should see this output:<br>
 ```
-Packaging for /include: D:/Codes/build/zlib/$(Configuration)/zlib.dll -> D:/Codes/build/zlib/lib
-Packaging for /include: D:/Codes/build/zlib/$(Configuration)/zlib.lib -> D:/Codes/build/zlib/lib
-Packaging for /include: D:/Codes/build/zlib/$(Configuration)/zlibstatic.lib -> D:/Codes/build/zlib/lib
-Packaging for /include: D:/Codes/source/zlib/*.h -> D:/Codes/build/zlib/include
-Packaging for /include: D:/Codes/build/zlib/zconf.h -> D:/Codes/build/zlib/include
+Packaging for /include: E:/lib/codes-openvdb/build/zlib/$(Configuration)/zlib.dll -> E:/lib/codes-openvdb/build/zlib/lib
+Packaging for /include: E:/lib/codes-openvdb/build/zlib/$(Configuration)/zlib.lib -> E:/lib/codes-openvdb/build/zlib/lib
+Packaging for /include: E:/lib/codes-openvdb/build/zlib/$(Configuration)/zlibstatic.lib -> E:/lib/codes-openvdb/build/zlib/lib
+Packaging for /include: E:/lib/codes-openvdb/source/zlib/*.h -> E:/lib/codes-openvdb/build/zlib/include
+Packaging for /include: E:/lib/codes-openvdb/build/zlib/zconf.h -> E:/lib/codes-openvdb/build/zlib/include
 Configuring done
 Generating done
 ```
-3.4. Go to the path \code\build\zlib, and open zlib.sln in VS2010<br>
-3.5. Select "Release" mode, 64-bit, and Build all.. Should have 6 succeeded, 0 failed.<br>
+3.4. Go to the path \code\build\zlib, and open zlib.sln in VS2015<br>
+3.5. Select "Release" mode, x64, and Build all.. Should have 6 succeeded, 0 failed.<br>
 
 4) IlmBase - CMake and Build
 -------------------------------------
 4.1. Run cmake-gui, and specify the following source and build paths:<br>
 Source code: \codes\source\win_openexr\IlmBase<br>
 Build binaries: \codes\build\IlmBase<br>
-4.2. Click Configure, and choose "Visual Studio 10 Win64". <br>
+4.2. Click Configure, and choose "Visual Studio 14 2015 Win64". <br>
 4.3. Now click Generate. <br>
 You should see this output:<br>
 ```
-Packaging for /include: D:/Codes/build/IlmBase/Half/$(Configuration)/Half.dll -> D:/Codes/build/IlmBase/lib
-Packaging for /include: D:/Codes/build/IlmBase/Half/$(Configuration)/Half.lib -> D:/Codes/build/IlmBase/lib
-Packaging for /include: D:/Codes/source/win_openexr/IlmBase/Half/*.h -> D:/Codes/build/IlmBase/include
-Packaging for /include: D:/Codes/build/IlmBase/Iex/$(Configuration)/Iex.dll -> D:/Codes/build/IlmBase/lib
-Packaging for /include: D:/Codes/build/IlmBase/Iex/$(Configuration)/Iex.lib -> D:/Codes/build/IlmBase/lib
-Packaging for /include: D:/Codes/source/win_openexr/IlmBase/Iex/*.h -> D:/Codes/build/IlmBase/include
-Packaging for /include: D:/Codes/build/IlmBase/IexMath/$(Configuration)/IexMath.dll -> D:/Codes/build/IlmBase/lib
-Packaging for /include: D:/Codes/build/IlmBase/IexMath/$(Configuration)/IexMath.lib -> D:/Codes/build/IlmBase/lib
-Packaging for /include: D:/Codes/source/win_openexr/IlmBase/IexMath/*.h -> D:/Codes/build/IlmBase/include
-Packaging for /include: D:/Codes/build/IlmBase/Imath/$(Configuration)/Imath.dll -> D:/Codes/build/IlmBase/lib
-Packaging for /include: D:/Codes/build/IlmBase/Imath/$(Configuration)/Imath.lib -> D:/Codes/build/IlmBase/lib
-Packaging for /include: D:/Codes/source/win_openexr/IlmBase/Imath/*.h -> D:/Codes/build/IlmBase/include
-Packaging for /include: D:/Codes/build/IlmBase/IlmThread/$(Configuration)/IlmThread.dll -> D:/Codes/build/IlmBase/lib
-Packaging for /include: D:/Codes/build/IlmBase/IlmThread/$(Configuration)/IlmThread.lib -> D:/Codes/build/IlmBase/lib
-Packaging for /include: D:/Codes/source/win_openexr/IlmBase/IlmThread/*.h -> D:/Codes/build/IlmBase/include
+Packaging for /include: E:/lib/codes-openvdb/build/IlmBase/Half/$(Configuration)/Half.dll -> E:/lib/codes-openvdb/build/IlmBase/lib
+Packaging for /include: E:/lib/codes-openvdb/build/IlmBase/Half/$(Configuration)/Half.lib -> E:/lib/codes-openvdb/build/IlmBase/lib
+Packaging for /include: E:/lib/codes-openvdb/source/win_openexr/IlmBase/Half/*.h -> E:/lib/codes-openvdb/build/IlmBase/include
+Packaging for /include: E:/lib/codes-openvdb/build/IlmBase/Iex/$(Configuration)/Iex.dll -> E:/lib/codes-openvdb/build/IlmBase/lib
+Packaging for /include: E:/lib/codes-openvdb/build/IlmBase/Iex/$(Configuration)/Iex.lib -> E:/lib/codes-openvdb/build/IlmBase/lib
+Packaging for /include: E:/lib/codes-openvdb/source/win_openexr/IlmBase/Iex/*.h -> E:/lib/codes-openvdb/build/IlmBase/include
+Packaging for /include: E:/lib/codes-openvdb/build/IlmBase/IexMath/$(Configuration)/IexMath.dll -> E:/lib/codes-openvdb/build/IlmBase/lib
+Packaging for /include: E:/lib/codes-openvdb/build/IlmBase/IexMath/$(Configuration)/IexMath.lib -> E:/lib/codes-openvdb/build/IlmBase/lib
+Packaging for /include: E:/lib/codes-openvdb/source/win_openexr/IlmBase/IexMath/*.h -> E:/lib/codes-openvdb/build/IlmBase/include
+Packaging for /include: E:/lib/codes-openvdb/build/IlmBase/Imath/$(Configuration)/Imath.dll -> E:/lib/codes-openvdb/build/IlmBase/lib
+Packaging for /include: E:/lib/codes-openvdb/build/IlmBase/Imath/$(Configuration)/Imath.lib -> E:/lib/codes-openvdb/build/IlmBase/lib
+Packaging for /include: E:/lib/codes-openvdb/source/win_openexr/IlmBase/Imath/*.h -> E:/lib/codes-openvdb/build/IlmBase/include
+Packaging for /include: E:/lib/codes-openvdb/build/IlmBase/IlmThread/$(Configuration)/IlmThread.dll -> E:/lib/codes-openvdb/build/IlmBase/lib
+Packaging for /include: E:/lib/codes-openvdb/build/IlmBase/IlmThread/$(Configuration)/IlmThread.lib -> E:/lib/codes-openvdb/build/IlmBase/lib
+Packaging for /include: E:/lib/codes-openvdb/source/win_openexr/IlmBase/IlmThread/*.h -> E:/lib/codes-openvdb/build/IlmBase/include
 Configuring done
 Generating done
 ```
-4.4. Go to the path \code\build\IlmBase, and open IlmBase.sln in VS2010<br>
-4.5. Select "Release" mode, 64-bit, and Build all.. Should have 12 succeeded, 0 failed.<br>
+4.4. Go to the path \code\build\IlmBase, and open IlmBase.sln in VS2015<br>
+4.5. Select "Release" mode, x64, and Build all.. Should have 12 succeeded, 0 failed.<br>
 
-5) OpenEXR - CMake and Build
+5) OpenEXR - CMake and Build   here problems may occur 
 -------------------------------------
 5.1. Run cmake-gui, and specify the following source and build paths:<br>
 Source code: \codes\source\win_openexr\OpenEXR<br>
 Build binaries: \codes\build\OpenEXR<br>
-5.2. Click Configure, and choose "Visual Studio 10 Win64". <br>
+5.2. Click Configure, and choose "Visual Studio 14 2015 Win64". <br>
 5.3. Now click Generate. <br>
 You should see this output:<br>
 ```
-Zlib Library: Found at D:/Codes/build/zlib/lib/zlib.lib
-IlmBase Library: Found at D:/Codes/build/IlmBase/lib/Half.lib;D:/Codes/openvdb/build/IlmBase/lib/Iex.lib;D:/Codes/build/IlmBase/lib/Imath.lib;D:/Codes/IlmBase/lib/IlmThread.lib
-ILMBASE_PACKAGE_PREFIX = D:/Codes/build/IlmBase
-Packaging for /include: D:/Codes/source/win_openexr/OpenEXR/IlmImf/*.h -> D:/Codes/build/OpenEXR/include
+Zlib Library: Found at E:/lib/codes-openvdb/build/zlib/lib/zlib.lib
+IlmBase Library: Found at E:/lib/codes-openvdb/build/IlmBase/lib/Half.lib;E:/lib/codes-openvdb/build/IlmBase/lib/Iex.lib;E:/lib/codes-openvdb/build/IlmBase/lib/Imath.lib;E:/lib/codes-openvdb/build/IlmBase/lib/IlmThread.lib
+ILMBASE_PACKAGE_PREFIX = E:/lib/codes-openvdb/build/IlmBase
+Performing Test HAVE_GCC_INLINE_ASM_AVX
+Performing Test HAVE_GCC_INLINE_ASM_AVX - Failed
+Performing Test HAVE_SYSCONF_NPROCESSORS_ONLN
+Performing Test HAVE_SYSCONF_NPROCESSORS_ONLN - Failed
+Packaging for /include: E:/lib/codes-openvdb/source/win_openexr/OpenEXR/IlmImf/*.h -> E:/lib/codes-openvdb/build/OpenEXR/include
 Configuring done
+CMake Warning (dev) at IlmImf/CMakeLists.txt:189 (ADD_DEPENDENCIES):
+  Policy CMP0046 is not set: Error on non-existent dependency in
+  add_dependencies.  Run "cmake --help-policy CMP0046" for policy details.
+  Use the cmake_policy command to set the policy and suppress this warning.
+
+  The dependency target "b44ExpLogTable" of target "IlmImf" does not exist.
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at IlmImf/CMakeLists.txt:198 (ADD_DEPENDENCIES):
+  Policy CMP0046 is not set: Error on non-existent dependency in
+  add_dependencies.  Run "cmake --help-policy CMP0046" for policy details.
+  Use the cmake_policy command to set the policy and suppress this warning.
+
+  The dependency target "dwaLookups" of target "IlmImf" does not exist.
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
 Generating done
 ```
-5.4. Go to the path \code\build\OpenEXR, and open OpenEXR.sln in VS2010<br>
-5.5. Select "Release" mode, 64-bit, and Build all.. Should have 15 succeeded, 0 failed.<br>
+5.4. Go to the path \code\build\OpenEXR, and open OpenEXR.sln in VS2015<br>
+5.5  Before build .sln,you should include zlib.h in IlmImf project's Properties pages then select VC++ Directories and add E:\lib\codes-openvdb\build\zlib\include   path to Include Directories
+5.6. Select "Release" mode, 64-bit, and Build all.. Should have 15 succeeded, 0 failed.<br>
 
-6) OpenVDB - CMake and Build
+6) OpenVDB - CMake and Build  problems may occur in cmake process
 -------------------------------------
 6.1. Run cmake-gui, and specify the following source and build paths:<br>
-Source code: \codes\source\win_openvdb\OpenVDB<br>
+Source code: \codes\source\win_openvdb\openvdb<br>
 Build binaries: \codes\build\OpenVDB<br>
-6.2. Click Configure, and choose "Visual Studio 10 Win64". <br>
+6.2. Click Configure, and choose "Visual Studio 14 2015 Win64". <br>
 6.3. Now click Generate. <br>
 You should see this output:<br>
 ```
-GLFW3 Library: Found at D:/Codes/build/glfw/lib/glfw3.lib
-GLEW Library: Found at D:/Codes/build/glew-1.11.0/lib/Release/x64/glew32.lib
-Boost version: 1.57.0
-Found the following Boost libraries:
-  iostreams
-  system
-  thread
-IlmBase Library: Fount at D:/Codes/build/IlmBase/lib/Half.lib;D:/Codes/build/IlmBase/lib/Iex.lib;D:/Codes/build/IlmBase/lib/Imath.lib;D:/Codes/build/IlmBase/lib/IlmThread.lib
-OpenEXR Library: Fount at D:/Codes/build/OpenEXR/lib/IlmImf.lib
-TBB Library Dir: D:/Codes/build/tbb43/lib/intel64/vc10/ 
+GLFW3 Library: Found at C:/Program Files (x86)/VC/lib/glfw3.lib
+GLEW Library: Found at E:/lib/codes-openvdb/build/glew-1.11.0/lib/Release/x64/glew32.lib
+CMake Error at E:/lib/codes-openvdb/source/win_openvdb/cmake_modules/FindBoost.cmake:1243 (message):
+  Unable to find the requested Boost libraries.
+
+  Boost version: 1.61.0
+
+  Boost include path: E:/lib/codes-openvdb/build/boost_1_61_0
+
+  Could not find the following Boost libraries:
+
+          boost_iostreams
+          boost_system
+          boost_thread
+
+  No Boost libraries were found.  You may need to set BOOST_LIBRARYDIR to the
+  directory containing Boost libraries or BOOST_ROOT to the location of
+  Boost.
+Call Stack (most recent call first):
+  CMakeLists.txt:57 (FIND_PACKAGE)
+
+
+IlmBase Library: Found at E:/lib/codes-openvdb/build/IlmBase/lib/Half.lib;E:/lib/codes-openvdb/build/IlmBase/lib/Iex.lib;E:/lib/codes-openvdb/build/IlmBase/lib/Imath.lib;E:/lib/codes-openvdb/build/IlmBase/lib/IlmThread.lib
+OpenEXR Library: Found at 
+TBB Library Dir: E:/lib/codes-openvdb/build/tbb44/lib/intel64// 
 TBB Arch:        intel64 
-TBB Compiler:    vc10 
-TBB Library: Found at D:/Codes/build/tbb43/lib/intel64/vc10/tbb.lib
-Zlib Library: Found at D:/Codes/build/zlib/lib/zlib.lib
-Packaging for /include: D:/Codes/build/OpenEXR/lib/IlmImf.dll -> D:/Codes/build/OpenVDB/Release
-Packaging for /include: D:/Codes/build/IlmBase/lib/Half.dll -> D:/Codes/build/OpenVDB/Release
-Packaging for /include: D:/Codes/build/IlmBase/lib/Iex.dll -> D:/Codes/build/OpenVDB/Release
-Packaging for /include: D:/Codes/build/IlmBase/lib/Imath.dll -> D:/Codes/build/OpenVDB/Release
-Packaging for /include: D:/Codes/build/IlmBase/lib/IlmThread.dll -> D:/Codes/build/OpenVDB/Release
-Packaging for /include: D:/Codes/build/zlib/lib/zlib.dll -> D:/Codes/build/OpenVDB/Release
-Packaging for /include: D:/Codes/build/tbb43/bin/intel64/vc10/*.dll -> D:/Codes/build/OpenVDB/Release
-Packaging for /include: D:/Codes/build/boost_1_57_0/lib64-msvc-10.0/boost_system*.dll -> D:/Codes/openvdb/build/OpenVDB/Release
-Packaging for /include: D:/Codes/build/OpenEXR/lib/IlmImf.dll -> D:/Codes/build/OpenVDB/Debug
-Packaging for /include: D:/Codes/build/IlmBase/lib/Half.dll -> D:/Codes/build/OpenVDB/Debug
-Packaging for /include: D:/Codes/build/IlmBase/lib/Iex.dll -> D:/Codes/build/OpenVDB/Debug
-Packaging for /include: D:/Codes/build/IlmBase/lib/Imath.dll -> D:/Codes/build/OpenVDB/Debug
-Packaging for /include: D:/Codes/build/IlmBase/lib/IlmThread.dll -> D:/Codes/build/OpenVDB/Debug
-Packaging for /include: D:/Codes/build/zlib/lib/zlib.dll -> D:/Codes/build/OpenVDB/Debug
-Packaging for /include: D:/Codes/build/tbb43/bin/intel64/vc10/*.dll -> D:/Codes/build/OpenVDB/Debug
-Packaging for /include: D:/Codes/build/boost_1_57_0/lib64-msvc-10.0/boost_system*.dll -> D:/Codes/openvdb/build/OpenVDB/Debug
-Configuring done
-Generating done
+TBB Compiler:     
+TBB Library: NOT Found! Confirm that TBB_ARCH_PLATFORM and TBB_INSTALL_DIR are correct.
+CMake Error at E:/lib/codes-openvdb/source/win_openvdb/cmake_modules/FindTBB.cmake:296 (message):
+  TBB Library: NOT Found! Confirm that TBB_ARCH_PLATFORM and TBB_INSTALL_DIR
+  are correct.
+Call Stack (most recent call first):
+  CMakeLists.txt:61 (FIND_PACKAGE)
+
+
+Configuring incomplete, errors occurred!
+See also "E:/lib/codes-openvdb/build/OpenVDB/CMakeFiles/CMakeOutput.log".
 ```
-6.4. Go to the path \code\build\OpenVDB, and open OpenVDB.sln in VS2010<br>
-6.5. Select "Release" mode, 64-bit, and Build all.. Should have 5 succeeded, 2 failed.<br>
+6.4.Based on the above errors ,you should include path for NOTFOUND values including TBB and Boost in Name column
+you can refer to this URL to see the path for TBB and Boost and glfw :
+
+
+6.5. Go to the path \code\build\OpenVDB, and open OpenVDB.sln in VS2015<br>
+6.6. Select "Release" mode, 64-bit, and Build all.. Should have 6 succeeded, 1 failed.<br>
 
 7) Check it and Try it!
 -------------------------------------
